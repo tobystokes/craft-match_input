@@ -21,6 +21,8 @@ A _Match Input_ field is
 a _Plain Text_ field with the addition of a regex pattern that the field must match to
 be valid.
 
+This fork additionally tests that the value is unique cross all entries 
+
 ## Using Match Input
 
 When you create the field, you specify the `Input Mask`.
