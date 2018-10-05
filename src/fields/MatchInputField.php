@@ -13,6 +13,7 @@ namespace marionnewlevant\matchinput\fields;
 use Craft;
 use craft\base\ElementInterface;
 use craft\fields\PlainText;
+use craft\elements\Entry;
 
 /**
  *  Field
@@ -51,6 +52,11 @@ class MatchInputField extends PlainText
      * @var string The input’s errorMessage text
      */
     public $errorMessage;
+
+    /**
+     * @var string The input’s errorMessage text if not unique
+     */
+    public $uniqueErrorMessage;
 
     // If we don't duplicate the properties of PlainText field here, then they don't get saved
     // =========================================================================
@@ -165,6 +171,7 @@ class MatchInputField extends PlainText
         $rules = parent::getElementValidationRules();
         // add our rule
         $rules[] = 'validateMatchesRegex';
+        $rules[] = 'validateIsUnique';
         return $rules;
     }
 
@@ -183,6 +190,37 @@ class MatchInputField extends PlainText
         if ($match !== 1)
         {
             $element->addError($this->handle, Craft::t('site', $this->errorMessage));
+        }
+    }
+
+    /**
+     * Checks if another entry exists with the given value
+     *
+     * @param  string $value The value to check
+     * @return bool
+     */
+    private function valueExists($value)
+    {
+        $fieldName = $this->handle;
+        $existing = Entry::find()
+          ->$fieldName($value)
+          ->count();
+        return ($existing);
+    }
+
+    /**
+     * Validates if the field value is unique.
+     *
+     * @param ElementInterface $element
+     * @param array|null       $params
+     *
+     * @return void
+     */
+    public function validateIsUnique(ElementInterface $element, array $params = null)
+    {
+        $value = $element->getFieldValue($this->handle);
+        if ($this->valueExists($value)) {
+          $element->addError($this->handle, Craft::t('site', $this->uniqueErrorMessage));
         }
     }
 }

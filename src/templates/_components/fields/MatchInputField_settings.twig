@@ -34,6 +34,16 @@
   errors: field.getErrors('errorMessage')
 }) }}
 
+{{ forms.textField({
+  label: "Unique Error Message"|t('matchinput'),
+  instructions: "Error message when entry is not unique"|t('matchinput'),
+  id: 'uniqueErrorMessage',
+  name: 'uniqueErrorMessage',
+  value: field.uniqueErrorMessage,
+  translatable: true,
+  errors: field.getErrors('uniqueErrorMessage')
+}) }}
+
 {# below here straight from _components/fieldtypes/PlainText/settings.html #}
 
 {{ forms.textField({
